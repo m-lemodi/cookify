@@ -1,0 +1,20 @@
+services:
+  db:
+    container_name: postgres
+    image: postgres:15   # pin a version for reproducibility
+    environment:
+      POSTGRES_USER: cookify_user
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: cookify_db
+    volumes:
+      - db_data:/var/lib/postgresql/data   # persist data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cookify_user -d cookify_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
